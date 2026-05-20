@@ -71,3 +71,6 @@ Temporary Items
 **.tpz
 **.vpk
 **/.gdignore
+audio-optimized/
+build/
+.cache/
