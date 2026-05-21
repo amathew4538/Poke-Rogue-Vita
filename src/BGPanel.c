@@ -70,16 +70,17 @@ int main(int argc, char *argv[])
     return -1;
   }
 
-  // Blue BKG
-  SDL_SetRenderDrawColor(gRenderer, 0, 0, 255, 255);
+
   SDL_RenderClear(gRenderer);
 
-  // Dialogue image
   SDL_Texture* dialogueBoxTexture = IMG_LoadTexture(gRenderer, DIALOGUE_BOX_PATH);
-  SDL_Texture* plainsBGTexture = IMG_LoadTexture(gRenderer, PLAINS_BG_PATH);
+  SDL_Texture* townBGTexture = IMG_LoadTexture(gRenderer, TOWN_BG_PATH);
+  SDL_Texture* townATexture = IMG_LoadTexture(gRenderer, TOWN_A_PATH);
+  SDL_Texture* townBTexture = IMG_LoadTexture(gRenderer, TOWN_B_PATH);
 
-
-  SDL_RenderCopy(gRenderer, plainsBGTexture, NULL, &upperGameRect);
+  SDL_RenderCopy(gRenderer, townBGTexture, NULL, &upperGameRect);
+  SDL_RenderCopy(gRenderer, townATexture, NULL, &upperGameRect);
+  SDL_RenderCopy(gRenderer, townBTexture, NULL, &upperGameRect);
   SDL_RenderCopy(gRenderer, dialogueBoxTexture, &bottomPanelSrcRect, &bottomPanelDstRect);
 
   SDL_RenderPresent(gRenderer);
