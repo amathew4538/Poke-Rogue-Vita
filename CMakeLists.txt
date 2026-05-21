@@ -27,7 +27,7 @@ link_directories(
 )
 
 add_executable(${PROJECT_NAME}
-  src/main.c
+  src/BGPanel.c
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -61,4 +61,5 @@ vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
   VERSION ${VITA_VERSION}
   NAME ${VITA_APP_NAME}
   FILE sce_sys/icon0.png sce_sys/icon0.png
+  FILE ${CMAKE_CURRENT_SOURCE_DIR}/assets/images/ui/bg.png assets/images/ui/bg.png
 )

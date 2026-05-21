@@ -1,3 +1,3 @@
 [submodule "pokerogue-assets"]
-	path = pokerogue-assets
+	path = assets
 	url = https://github.com/pagefaultgames/pokerogue-assets.git
