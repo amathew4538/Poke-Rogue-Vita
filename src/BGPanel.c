@@ -1,6 +1,7 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_image.h>
+#include "bgLocations.h"
 
 //Screen dimension constants
 enum {
@@ -11,7 +12,7 @@ enum {
 SDL_Window    * gWindow   = NULL;
 SDL_Renderer  * gRenderer = NULL;
 
-SDL_Rect srcrect =
+SDL_Rect bottomPanelSrcRect =
 {
   0,
   0,
@@ -19,12 +20,20 @@ SDL_Rect srcrect =
   48
 };
 
-SDL_Rect dstrect =
+SDL_Rect bottomPanelDstRect =
 {
   0,
   SCREEN_HEIGHT - 112,
   SCREEN_WIDTH,
   112
+};
+
+SDL_Rect upperGameRect =
+{
+  0,
+  0,
+  SCREEN_WIDTH,
+  SCREEN_HEIGHT - 112
 };
 
 int main(int argc, char *argv[])
@@ -65,20 +74,20 @@ int main(int argc, char *argv[])
   SDL_SetRenderDrawColor(gRenderer, 0, 0, 255, 255);
   SDL_RenderClear(gRenderer);
 
-  // BG image
-  SDL_Texture* bgTexture = IMG_LoadTexture(gRenderer, "app0:/assets/images/ui/bg.png");
-  if (bgTexture != NULL) {
-    SDL_RenderCopy(gRenderer, bgTexture, &srcrect, &dstrect);
-  } else {
-    // If the image fails to load, the screen will just stay blue.
-  }
+  // Dialogue image
+  SDL_Texture* dialogueBoxTexture = IMG_LoadTexture(gRenderer, DIALOGUE_BOX_PATH);
+  SDL_Texture* plainsBGTexture = IMG_LoadTexture(gRenderer, PLAINS_BG_PATH);
+
+
+  SDL_RenderCopy(gRenderer, plainsBGTexture, NULL, &upperGameRect);
+  SDL_RenderCopy(gRenderer, dialogueBoxTexture, &bottomPanelSrcRect, &bottomPanelDstRect);
 
   SDL_RenderPresent(gRenderer);
 
   SDL_Delay(5000);
 
-  if (bgTexture) {
-    SDL_DestroyTexture(bgTexture);
+  if (dialogueBoxTexture) {
+    SDL_DestroyTexture(dialogueBoxTexture);
   }
   SDL_DestroyRenderer(gRenderer);
   SDL_DestroyWindow(gWindow);

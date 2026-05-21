@@ -10,6 +10,7 @@ endif()
 
 project(PokeRogue_Vita C)
 include("${VITASDK}/share/vita.cmake" REQUIRED)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 find_package(PkgConfig REQUIRED)
 pkg_check_modules(SDL2 REQUIRED sdl2)
@@ -17,7 +18,7 @@ pkg_check_modules(SDL2_IMAGE REQUIRED SDL2_image)
 
 set(VITA_APP_NAME "PokeRogue Vita")
 set(VITA_TITLEID  "PKRG00001") 
-set(VITA_VERSION  "00.01")
+set(VITA_VERSION  "00.02")
 
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 set(VITA_MKSFOEX_FLAGS "${VITA_MKSFOEX_FLAGS} -d PARENTAL_LEVEL=1")
@@ -26,8 +27,10 @@ link_directories(
   ${CMAKE_CURRENT_BINARY_DIR}
 )
 
+file(GLOB ALL_SOURCES CONFIGURE_DEPENDS "src/*.c" "src/*.h")
+
 add_executable(${PROJECT_NAME}
-  src/BGPanel.c
+  ${ALL_SOURCES}
 )
 
 target_include_directories(${PROJECT_NAME} PRIVATE
@@ -55,11 +58,23 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   z
 )
 
+set(VPK_STAGING_DIR "${CMAKE_CURRENT_BINARY_DIR}/temp_images")
+
+add_custom_command(
+    TARGET ${PROJECT_NAME} POST_BUILD
+
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${VPK_STAGING_DIR}/assets/images"
+
+    COMMAND ${CMAKE_COMMAND} -E copy_directory "${CMAKE_CURRENT_SOURCE_DIR}/assets/images" "${VPK_STAGING_DIR}/assets/images"
+    
+    COMMENT "Staging images directory for VPK packaging..."
+)
+
 vita_create_self(${PROJECT_NAME}.self ${PROJECT_NAME})
 
 vita_create_vpk(${PROJECT_NAME}.vpk ${VITA_TITLEID} ${PROJECT_NAME}.self
   VERSION ${VITA_VERSION}
   NAME ${VITA_APP_NAME}
   FILE sce_sys/icon0.png sce_sys/icon0.png
-  FILE ${CMAKE_CURRENT_SOURCE_DIR}/assets/images/ui/bg.png assets/images/ui/bg.png
+  FILE "${VPK_STAGING_DIR}/assets" "assets"
 )
