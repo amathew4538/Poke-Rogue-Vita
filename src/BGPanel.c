@@ -1,101 +1,31 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_render.h>
 #include <SDL2/SDL_image.h>
-#include "bgLocations.h"
+#include "bgPanel.h"
+#include "constants.h"
 
-//Screen dimension constants
-enum {
-  SCREEN_WIDTH  = 960,
-  SCREEN_HEIGHT = 544
-};
+SDL_Rect bottomPanelSrcRect = { 0, 0, 340, 48 };
+SDL_Rect bottomPanelDstRect = { 0, SCREEN_HEIGHT - 112, SCREEN_WIDTH, 112 };
+SDL_Rect upperGameRect = { 0, 0, SCREEN_WIDTH, SCREEN_HEIGHT - 112 };
 
-SDL_Window    * gWindow   = NULL;
-SDL_Renderer  * gRenderer = NULL;
-
-SDL_Rect bottomPanelSrcRect =
+void drawTownBackground()
 {
-  0,
-  0,
-  340,
-  48
-};
+  SDL_RenderClear(renderer);
 
-SDL_Rect bottomPanelDstRect =
-{
-  0,
-  SCREEN_HEIGHT - 112,
-  SCREEN_WIDTH,
-  112
-};
+  SDL_Texture* dialogueBoxTexture = IMG_LoadTexture(renderer, DIALOGUE_BOX_PATH);
+  SDL_Texture* townBGTexture = IMG_LoadTexture(renderer, TOWN_BG_PATH);
+  SDL_Texture* townATexture = IMG_LoadTexture(renderer, TOWN_A_PATH);
+  SDL_Texture* townBTexture = IMG_LoadTexture(renderer, TOWN_B_PATH);
 
-SDL_Rect upperGameRect =
-{
-  0,
-  0,
-  SCREEN_WIDTH,
-  SCREEN_HEIGHT - 112
-};
+  SDL_RenderCopy(renderer, townBGTexture, NULL, &upperGameRect);
+  SDL_RenderCopy(renderer, townATexture, NULL, &upperGameRect);
+  SDL_RenderCopy(renderer, townBTexture, NULL, &upperGameRect);
+  SDL_RenderCopy(renderer, dialogueBoxTexture, &bottomPanelSrcRect, &bottomPanelDstRect);
 
-int main(int argc, char *argv[])
-{
-  // Initialize SDL
-  if(SDL_Init( SDL_INIT_VIDEO ) < 0)
-  {
-    return -1;
-  }
+  SDL_RenderPresent(renderer);
 
-  // Initialize IMGs
-  int flags = IMG_INIT_PNG;
-  if ((IMG_Init(flags) & flags) != flags)
-  {
-    SDL_Quit();
-    return -1;
-  }
-
-  // Initialize Window
-  if ((gWindow = SDL_CreateWindow("pokerogue", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, SCREEN_WIDTH,
-    SCREEN_HEIGHT, SDL_WINDOW_SHOWN)) == NULL)
-  {
-    IMG_Quit();
-    SDL_Quit();
-    return -1;
-  }
-
-  // Initialize Renderer
-  if ((gRenderer = SDL_CreateRenderer( gWindow, -1, 0)) == NULL)
-  {
-    SDL_DestroyWindow(gWindow);
-    IMG_Quit();
-    SDL_Quit();
-    return -1;
-  }
-
-
-  SDL_RenderClear(gRenderer);
-
-  SDL_Texture* dialogueBoxTexture = IMG_LoadTexture(gRenderer, DIALOGUE_BOX_PATH);
-  SDL_Texture* townBGTexture = IMG_LoadTexture(gRenderer, TOWN_BG_PATH);
-  SDL_Texture* townATexture = IMG_LoadTexture(gRenderer, TOWN_A_PATH);
-  SDL_Texture* townBTexture = IMG_LoadTexture(gRenderer, TOWN_B_PATH);
-
-  SDL_RenderCopy(gRenderer, townBGTexture, NULL, &upperGameRect);
-  SDL_RenderCopy(gRenderer, townATexture, NULL, &upperGameRect);
-  SDL_RenderCopy(gRenderer, townBTexture, NULL, &upperGameRect);
-  SDL_RenderCopy(gRenderer, dialogueBoxTexture, &bottomPanelSrcRect, &bottomPanelDstRect);
-
-  SDL_RenderPresent(gRenderer);
-
-  SDL_Delay(5000);
-
-  if (dialogueBoxTexture) {
-    SDL_DestroyTexture(dialogueBoxTexture);
-  }
-  SDL_DestroyRenderer(gRenderer);
-  SDL_DestroyWindow(gWindow);
-
-  gWindow = NULL;
-  gRenderer = NULL;
-
-  SDL_Quit();
-  return 0;
+  if (dialogueBoxTexture) SDL_DestroyTexture(dialogueBoxTexture);
+  if (townBGTexture)      SDL_DestroyTexture(townBGTexture);
+  if (townATexture)       SDL_DestroyTexture(townATexture);
+  if (townBTexture)       SDL_DestroyTexture(townBTexture);
 }

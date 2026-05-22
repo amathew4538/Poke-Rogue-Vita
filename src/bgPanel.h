@@ -1,5 +1,7 @@
-#ifndef BGLOCATIONS_H
-#define BGLOCATIONS_H
+#ifndef BGPANEL_H
+#define BGPANEL_H
+
+#include <SDL2/SDL.h>
 
 // Dialogue Box
 #define DIALOGUE_BOX_PATH "app0:/assets/images/ui/bg.png"
@@ -16,5 +18,7 @@
 #define PLAINS_B1_PATH "app0:/assets/images/arenas/plains_b_1.png"
 #define PLAINS_B2_PATH "app0:/assets/images/arenas/plains_b_2.png"
 #define PLAINS_B3_PATH "app0:/assets/images/arenas/plains_b_3.png"
+
+void drawTownBackground(void);
 
 #endif
